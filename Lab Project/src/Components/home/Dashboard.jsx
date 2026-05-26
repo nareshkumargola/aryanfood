@@ -310,11 +310,7 @@ export default function Dashboard() {
                 >
                   {profile.photo ? (
                     <img
-                      src={
-                        profile.photo
-                          ? `${baseURL}${profile.photo}`
-                          : ""
-                      }
+                      src={profile.photo ? `${baseURL}${profile.photo}` : ""}
                       alt="avatar"
                       style={{
                         width: "52px",
@@ -448,7 +444,7 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      {/* MOBILE MENU — ONLY ADDED ROLE HERE */}
+      {/* MOBILE MENU */}
       <div
         className="mobile-menu"
         style={{
