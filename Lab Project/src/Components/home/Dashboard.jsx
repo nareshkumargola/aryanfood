@@ -31,7 +31,7 @@ export default function Dashboard() {
   const dropdownRef = useRef(null);
   const NAVBAR_H = 58;
 
-  // ✅ SCROLL
+  //  SCROLL
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
@@ -46,7 +46,7 @@ export default function Dashboard() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ✅ BODY PADDING
+  //  BODY PADDING
   useEffect(() => {
     document.body.style.paddingTop = `${0}px`;
     return () => {
@@ -54,7 +54,7 @@ export default function Dashboard() {
     };
   }, []);
 
-  // ✅ CLOSE DROPDOWN
+  //  CLOSE DROPDOWN
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -65,7 +65,7 @@ export default function Dashboard() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // ✅ TOKEN + ROLE
+  //  TOKEN + ROLE
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -83,7 +83,7 @@ export default function Dashboard() {
     }
   }, []);
 
-  // ✅ FETCH USER DATA
+  //  FETCH USER DATA
   useEffect(() => {
     async function loadProfile() {
       try {
