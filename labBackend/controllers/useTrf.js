@@ -263,12 +263,31 @@ exports.getTrfById = async (req, res) => {
 // ========== 4. UPDATE TRF (PUT /api/trf/:id) ==========
 exports.updateTrf = async (req, res) => {
   const trfId = parseInt(req.params.id, 10);
-  const { requestName, lotNo, remark, createdBy, selectedTests } = req.body;
+  const {
+    companyId,
+    labId,
+    productId,
+    requestName,
+    lotNo,
+    remark,
+    createdBy,
+    selectedTests,
+  } = req.body;
 
-  if (!requestName || !selectedTests || !selectedTests.length) {
+  if (
+    !companyId ||
+    !labId ||
+    !productId ||
+    !requestName ||
+    !selectedTests ||
+    !selectedTests.length
+  ) {
     return res
       .status(400)
-      .json({ error: "Missing required fields or no tests selected" });
+      .json({
+        error:
+          "Missing required fields: companyId, labId, productId, requestName, or no tests selected",
+      });
   }
 
   let connection;
@@ -277,12 +296,11 @@ exports.updateTrf = async (req, res) => {
 
     // ✅ No status check – allow updates regardless of status
     const existing = await connection.execute(
-      `SELECT company_id, lab_id, product_id FROM trf_requests WHERE id = :id`,
+      `SELECT id FROM trf_requests WHERE id = :id`,
       { id: trfId },
     );
     if (existing.rows.length === 0)
       return res.status(404).json({ error: "TRF not found" });
-    const [companyId, labId, productId] = existing.rows[0];
 
     // Update main table (status remains whatever it is – 'submitted' stays 'submitted')
     await connection.execute(
