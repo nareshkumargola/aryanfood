@@ -31,7 +31,7 @@ export default function Dashboard() {
   const dropdownRef = useRef(null);
   const NAVBAR_H = 58;
 
-  // ✅ SCROLL
+  //  SCROLL
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
@@ -46,7 +46,7 @@ export default function Dashboard() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ✅ BODY PADDING
+  //  BODY PADDING
   useEffect(() => {
     document.body.style.paddingTop = `${0}px`;
     return () => {
@@ -54,7 +54,7 @@ export default function Dashboard() {
     };
   }, []);
 
-  // ✅ CLOSE DROPDOWN
+  //  CLOSE DROPDOWN
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -65,7 +65,7 @@ export default function Dashboard() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // ✅ TOKEN + ROLE
+  //  TOKEN + ROLE
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -83,7 +83,7 @@ export default function Dashboard() {
     }
   }, []);
 
-  // ✅ FETCH USER DATA FROM /api/user WITH AUTHORIZATION HEADER
+  //  FETCH USER DATA
   useEffect(() => {
     async function loadProfile() {
       try {
@@ -94,13 +94,6 @@ export default function Dashboard() {
             Authorization: `Bearer ${token}`,
           },
         });
-        // if (!token) {
-        //   navigate("/");
-        //   return;
-        // }
-
-        // // ✅ API interceptor will automatically add Authorization header
-        // const res = await api.get("/users");
 
         setProfile({
           name: res.data.name || res.data.full_name || "User",
@@ -110,7 +103,6 @@ export default function Dashboard() {
         });
       } catch (err) {
         console.error("Failed to fetch user data:", err);
-        // If 401 or token invalid, interceptor will handle redirect
         if (err.response?.status === 401) {
           localStorage.removeItem("token");
           navigate("/");
@@ -131,20 +123,18 @@ export default function Dashboard() {
           { to: "/allreports", icon: FaFileAlt, label: "All Report" },
         ]
       : []),
-    // { to: "/centrallab", icon: FaFlask, label: "Labs Report" },
-    // { to: "/project", icon: FaVial, label: "R&D" },
-    // { to: "/result", icon: FaChartLine, label: "Result" },
     { to: "/alltrf", icon: FaListAlt, label: "All Test Requests" },
   ];
 
   async function handleLogout() {
     try {
-      await api.post("/logout"); //  backend call
+      await api.post("/logout");
     } catch (err) {}
 
     localStorage.clear();
     window.location.href = "/";
   }
+
   return (
     <>
       <nav
@@ -183,7 +173,6 @@ export default function Dashboard() {
               width: "40px",
               height: "40px",
               objectFit: "cover",
-              
               border: "0.5px solid #c7c7c7",
             }}
           />
@@ -215,7 +204,6 @@ export default function Dashboard() {
         >
           {allLinks.map(({ to, icon: Icon, label }) => (
             <li key={to}>
-              {/* ✅ underline class handles hover via CSS below */}
               <Link to={to} className="nav-item-link">
                 <Icon className="nav-item-icon" />
                 {label}
@@ -322,11 +310,7 @@ export default function Dashboard() {
                 >
                   {profile.photo ? (
                     <img
-                      src={
-                        profile.photo
-                          ? `http://localhost:5000${profile.photo}`
-                          : ""
-                      }
+                      src={profile.photo ? `${baseURL}${profile.photo}` : ""}
                       alt="avatar"
                       style={{
                         width: "52px",
@@ -490,7 +474,7 @@ export default function Dashboard() {
         >
           {profile.photo ? (
             <img
-              src={profile.photo}
+              src={`${baseURL}${profile.photo}`}
               alt="avatar"
               style={{
                 width: "38px",
@@ -527,6 +511,7 @@ export default function Dashboard() {
             >
               {profile.name}
             </p>
+            {/* ✅ ONLY CHANGE: added role below name */}
             <p
               style={{
                 margin: 0,
@@ -534,7 +519,9 @@ export default function Dashboard() {
                 color: "#888",
                 textTransform: "capitalize",
               }}
-            ></p>
+            >
+              {role}
+            </p>
           </div>
         </div>
         {allLinks.map(({ to, icon: Icon, label }) => (
@@ -607,7 +594,6 @@ export default function Dashboard() {
 
       {/* ── CSS ── */}
       <style>{`
-        /* ✅ Nav link — default black, no underline */
         .nav-item-link {
           display: flex;
           align-items: center;
@@ -623,7 +609,6 @@ export default function Dashboard() {
           position: relative;
         }
 
-        /* ✅ Underline effect on hover only */
         .nav-item-link::after {
           content: "";
           position: absolute;
